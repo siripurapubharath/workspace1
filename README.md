@@ -127,12 +127,12 @@ The above command will create .kube folder in $home if dosen’t exist, and a co
       	- msrtest
       	command: aws-iam-authenticator
 
-Command:
-kubectl get svc
+	Command:
+	kubectl get svc
 
-Output:
-NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   13m
+	Output:
+	NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+	kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   13m
 
 
 # 8) Configure Worker-nodes:
@@ -168,14 +168,14 @@ cat configmaps.yaml
 	        - system:bootstrappers
         	- system:nodes
 
-Command: # kubectl apply -f configmaps.yaml 
-Output: configmap/aws-auth created
+	Command: # kubectl apply -f configmaps.yaml 
+	Output: configmap/aws-auth created
 
-Command: # kubectl get nodes
-Output:
-NAME                                             STATUS    ROLES     AGE       VERSION
-ip-xxxxxxxxxxxxxx.ap-south-1.compute.internal   Ready     <none>    41m       v1.11.5
-ip-xxxxxxxxxxxxxx.ap-south-1.compute.internal   Ready     <none>    41m       v1.11.5
+	Command: # kubectl get nodes
+	Output:
+	NAME                                             STATUS    ROLES     AGE       VERSION
+	ip-xxxxxxxxxxxxxx.ap-south-1.compute.internal   Ready     <none>    41m       v1.11.5
+	ip-xxxxxxxxxxxxxx.ap-south-1.compute.internal   Ready     <none>    41m       v1.11.5
 
       
 # 10) Tomcat Web Application Server with a sample HTML Page:
@@ -211,8 +211,8 @@ ip-xxxxxxxxxxxxxx.ap-south-1.compute.internal   Ready     <none>    41m       v1
 
 create tomcat container with below command:
 
-kubectl create -f tomcat.yaml
-deployment.apps/tomcat-pod created
+	kubectl create -f tomcat.yaml
+	deployment.apps/tomcat-pod created
 
 	ii) create a service yaml file for tomcat with below content:
 
@@ -234,39 +234,39 @@ deployment.apps/tomcat-pod created
 
 Create service with below command:
 
-kubectl create -f tomcat-svc.yaml
-service/tomcat-pod created
+	kubectl create -f tomcat-svc.yaml
+	service/tomcat-pod created
 
-kubectl get pods
-NAME                         READY     STATUS    RESTARTS   AGE
-tomcat-pod-5cc66b778-q4qfq   1/1       Running   0          2m
-tomcat-pod-5cc66b778-qqgct   1/1       Running   0          2m
+	kubectl get pods
+	NAME                         READY     STATUS    RESTARTS   AGE
+	tomcat-pod-5cc66b778-q4qfq   1/1       Running   0          2m
+	tomcat-pod-5cc66b778-qqgct   1/1       Running   0          2m
 
-kubectl get svc
-NAME         TYPE           CLUSTER-IP      EXTERNAL-IP                                                                PORT(S)          AGE
-kubernetes   ClusterIP      10.100.0.1      <none>                                                                     443/TCP          5h
-tomcat-pod   LoadBalancer   10.100.234.49   a4e3367e244d011e981ff0a3bd453b16-1080647442.ap-south-1.elb.amazonaws.com   8080:30000/TCP   53s
+	kubectl get svc
+	NAME         TYPE           CLUSTER-IP      EXTERNAL-IP                                                                PORT(S)          AGE
+	kubernetes   ClusterIP      10.100.0.1      <none>                                                                     443/TCP          5h
+	tomcat-pod   LoadBalancer   10.100.234.49   a4e3367e244d011e981ff0a3bd453b16-1080647442.ap-south-1.elb.amazonaws.com   8080:30000/TCP   53s
 
-kubectl describe svc tomcat-pod
-Name:                     tomcat-pod
-Namespace:                default
-Labels:                   run=tomcat-pod
-Annotations:              <none>
-Selector:                 run=tomcat-pod
-Type:                     LoadBalancer
-IP:                       10.100.234.49
-LoadBalancer Ingress:     a4e3367e244d011e981ff0a3bd453b16-1080647442.ap-south-1.elb.amazonaws.com
-Port:                     <unset>  8080/TCP
-TargetPort:               8080/TCP
-NodePort:                 <unset>  30000/TCP
-Endpoints:                192.168.159.255:8080,192.168.93.118:8080
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:
-  Type    Reason                Age   From                Message
-  ----    ------                ----  ----                -------
-  Normal  EnsuringLoadBalancer  1m    service-controller  Ensuring load balancer
-  Normal  EnsuredLoadBalancer   1m    service-controller  Ensured load balancer
+	kubectl describe svc tomcat-pod
+	Name:                     tomcat-pod
+	Namespace:                default
+	Labels:                   run=tomcat-pod
+	Annotations:              <none>
+	Selector:                 run=tomcat-pod
+	Type:                     LoadBalancer
+	IP:                       10.100.234.49
+	LoadBalancer Ingress:     a4e3367e244d011e981ff0a3bd453b16-1080647442.ap-south-1.elb.amazonaws.com
+	Port:                     <unset>  8080/TCP
+	TargetPort:               8080/TCP
+	NodePort:                 <unset>  30000/TCP
+	Endpoints:                192.168.159.255:8080,192.168.93.118:8080
+	Session Affinity:         None
+	External Traffic Policy:  Cluster
+	Events:
+  	Type    Reason                Age   From                Message
+  	----    ------                ----  ----                -------
+  	Normal  EnsuringLoadBalancer  1m    service-controller  Ensuring load balancer
+  	Normal  EnsuredLoadBalancer   1m    service-controller  Ensured load balancer
 
 Sample HTML file for HTML page:
 
@@ -303,8 +303,8 @@ Sample HTML file for HTML page:
 
 Create couchdb container with below command:
 
-kubectl create -f couchdb.yaml
-deployment.apps/couchdb-pod created
+	kubectl create -f couchdb.yaml
+	deployment.apps/couchdb-pod created
 
 	ii) create a service yaml file for couchdb with below content:
 
@@ -326,33 +326,33 @@ deployment.apps/couchdb-pod created
 
 Create service for couchdb with below command:
 
-kubectl create -f couchdb-svc.yaml
-service/couchdb-pod created
+	kubectl create -f couchdb-svc.yaml
+	service/couchdb-pod created
 
-kubectl get pods | grep -i couchdb
-couchdb-pod-56656d69b-4f4ms   1/1       Running   0          19m
-couchdb-pod-56656d69b-sjmj5   1/1       Running   0          19m
+	kubectl get pods | grep -i couchdb
+	couchdb-pod-56656d69b-4f4ms   1/1       Running   0          19m
+	couchdb-pod-56656d69b-sjmj5   1/1       Running   0          19m
 
-kubectl get svc | grep -i couchdb
-couchdb-pod   LoadBalancer   10.100.25.24     adac3d0a144df11e981ff0a3bd453b16-316676107.ap-south-1.elb.amazonaws.com   8080:30344/TCP   10m
+	kubectl get svc | grep -i couchdb
+	couchdb-pod   LoadBalancer   10.100.25.24     adac3d0a144df11e981ff0a3bd453b16-316676107.ap-south-1.elb.amazonaws.com   8080:30344/TCP   10m
 
-kubectl describe svc couchdb-pod
-Name:                     couchdb-pod
-Namespace:                default
-Labels:                   run=couchdb-pod
-Annotations:              <none>
-Selector:                 run=couchdb-pod
-Type:                     LoadBalancer
-IP:                       10.100.25.24
-LoadBalancer Ingress:     adac3d0a144df11e981ff0a3bd453b16-316676107.ap-south-1.elb.amazonaws.com
-Port:                     <unset>  8080/TCP
-TargetPort:               5984/TCP
-NodePort:                 <unset>  30344/TCP
-Endpoints:                192.168.102.156:5984,192.168.157.49:5984
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:
-  Type    Reason                Age   From                Message
-  ----    ------                ----  ----                -------
-  Normal  EnsuringLoadBalancer  9m    service-controller  Ensuring load balancer
-  Normal  EnsuredLoadBalancer   9m    service-controller  Ensured load balancer
+	kubectl describe svc couchdb-pod
+	Name:                     couchdb-pod
+	Namespace:                default
+	Labels:                   run=couchdb-pod
+	Annotations:              <none>
+	Selector:                 run=couchdb-pod
+	Type:                     LoadBalancer
+	IP:                       10.100.25.24
+	LoadBalancer Ingress:     adac3d0a144df11e981ff0a3bd453b16-316676107.ap-south-1.elb.amazonaws.com
+	Port:                     <unset>  8080/TCP
+	TargetPort:               5984/TCP
+	NodePort:                 <unset>  30344/TCP
+	Endpoints:                192.168.102.156:5984,192.168.157.49:5984
+	Session Affinity:         None
+	External Traffic Policy:  Cluster
+	Events:
+  	Type    Reason                Age   From                Message
+  	----    ------                ----  ----                -------
+  	Normal  EnsuringLoadBalancer  9m    service-controller  Ensuring load balancer
+  	Normal  EnsuredLoadBalancer   9m    service-controller  Ensured load balancer
