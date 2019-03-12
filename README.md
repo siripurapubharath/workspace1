@@ -54,9 +54,13 @@ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
  pip install awscli –upgrade
 
 # aws configure
+
 AWS Access Key ID [None]: xxxxxxxxxxxxxxxxxxxx
+
 AWS Secret Access Key [None]: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
 Default region name [None]: ap-south-1
+
 Default output format [None]:
 
 
@@ -66,32 +70,29 @@ Command:
 aws eks --region ap-south-1 create-cluster --name msrtest --role-arn arn:aws:iam::xxxx:role/msreksrole --resources-vpc-config subnetIds=subnet-0568b97d067a8d869,subnet-03197c55e02595a52,securityGroupIds=sg-072546f83efba8e8b
 
 Output:
-{
-     "cluster": {
-        "status": "CREATING",
-        "name": "msrtest",
-        "certificateAuthority": {},
-        "roleArn": "arn:aws:iam::xxxxxxxxxxxx:role/msreksrole",
-        "resourcesVpcConfig": {
-            "subnetIds": [
-                "subnet-0568b97d067a8d869",
-                "subnet-03197c55e02595a52"
-            ],
-            "vpcId": "vpc-046bbbf5bac574eaa",
-            "securityGroupIds": [
-                "sg-072546f83efba8e8b"
-            ]
-        },
-        "version": "1.11",
-        "arn": "arn:aws:eks:ap-south-1:xxxxxxxxxxxxxx:cluster/msrtest",
-        "platformVersion": "eks.2",
-        "createdAt": 1552377641.4
-    }
-}
-
-
-
-
+		{
+		
+     		"cluster": {
+        		"status": "CREATING",
+        		"name": "msrtest",
+        		"certificateAuthority": {},
+        		"roleArn": "arn:aws:iam::xxxxxxxxxxxx:role/msreksrole",
+        		"resourcesVpcConfig": {
+            		"subnetIds": [
+                		"subnet-0568b97d067a8d869",
+                		"subnet-03197c55e02595a52"
+            		],
+            		"vpcId": "vpc-046bbbf5bac574eaa",
+		            "securityGroupIds": [
+                		"sg-072546f83efba8e8b"
+            		]
+        		},
+        		"version": "1.11",
+        		"arn": "arn:aws:eks:ap-south-1:xxxxxxxxxxxxxx:cluster/msrtest",
+        		"platformVersion": "eks.2",
+        		"createdAt": 1552377641.4
+    		}
+		}
 
 
 # 7) Creating & configuring kubeconfig file using awscli: 
@@ -101,30 +102,30 @@ aws eks --region ap-south-1 update-kubeconfig --name msrtest
 
 The above command will create .kube folder in $home if dosen’t exist, and a config file in it with below mentioned content.
 
-apiVersion: v1
-clusters:
-- cluster:
-    certificate-authority-data: LS0-------------------------------------------------------------------------Qo=
-    server: https://---------------------------------.ap-south-1.eks.amazonaws.com
-  name: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
-contexts:
-- context:
+	apiVersion: v1
+	clusters:
+	- cluster:
+    	certificate-authority-data: LS0-------------------------------------------------------------------------Qo=
+    	server: https://---------------------------------.ap-south-1.eks.amazonaws.com
+  	name: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
+	contexts:
+	- context:
     cluster: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
     user: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
-  name: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
-current-context: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
-kind: Config
-preferences: {}
-users:
-- name: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1alpha1
-      args:
-      - token
-      - -i
-      - msrtest
-      command: aws-iam-authenticator
+  	name: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
+	current-context: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
+	kind: Config
+	preferences: {}
+	users:
+	- name: arn:aws:eks:ap-south-1:-----------------cluster/msrtest
+  	user:
+    	exec:
+      	apiVersion: client.authentication.k8s.io/v1alpha1
+      	args:
+      	- token
+      	- -i
+      	- msrtest
+      	command: aws-iam-authenticator
 
 Command:
 kubectl get svc
@@ -153,18 +154,19 @@ And click Create
 To achive above requirement we need to create a yaml file for configmaps.
 
 cat configmaps.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: aws-auth
-  namespace: kube-system
-data:
-  mapRoles: |
-    - rolearn: arn:aws:iam::--------------:role/msr-worker-nodes-NodeInstanceRole-xxxxxxxxxx
-      username: system:node:{{EC2PrivateDNSName}}
-      groups:
-        - system:bootstrappers
-        - system:nodes
+	
+	apiVersion: v1
+	kind: ConfigMap
+	metadata:
+  	name: aws-auth
+  	namespace: kube-system
+	data:
+  	mapRoles: |
+    	- rolearn: arn:aws:iam::--------------:role/msr-worker-nodes-NodeInstanceRole-xxxxxxxxxx
+	      username: system:node:{{EC2PrivateDNSName}}
+      	groups:
+	        - system:bootstrappers
+        	- system:nodes
 
 Command: # kubectl apply -f configmaps.yaml 
 Output: configmap/aws-auth created
@@ -180,32 +182,32 @@ ip-xxxxxxxxxxxxxx.ap-south-1.compute.internal   Ready     <none>    41m       v1
 
 	i) Create a deployment yaml file for tomcat with below content:
 
-apiVersion: apps/v1beta2
-kind: Deployment
-metadata:
-  name: tomcat-pod
-spec:
-  selector:
-    matchLabels:
-      run: tomcat-pod
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        run: tomcat-pod
-    spec:
-      containers:
-      - name: tomcat
-        image: tomcat:latest
-        volumeMounts:
-        - name: testvolume
-          mountPath: /usr/local/tomcat/webapps/ROOT
-        ports:
-        - containerPort: 8080
-      volumes:
-      - name: testvolume
-        hostPath:
-          path: /tmp/html
+	apiVersion: apps/v1beta2
+	kind: Deployment
+	metadata:
+  	name: tomcat-pod
+	spec:
+  	selector:
+    	matchLabels:
+      	run: tomcat-pod
+  	replicas: 2
+  	template:
+    	metadata:
+      	labels:
+        	run: tomcat-pod
+    	spec:
+      	containers:
+      	- name: tomcat
+	        image: tomcat:latest
+	        volumeMounts:
+        	- name: testvolume
+          	mountPath: /usr/local/tomcat/webapps/ROOT
+        	ports:
+        	- containerPort: 8080
+      	volumes:
+      	- name: testvolume
+	        hostPath:
+	          path: /tmp/html
 
 create tomcat container with below command:
 
@@ -214,21 +216,21 @@ deployment.apps/tomcat-pod created
 
 	ii) create a service yaml file for tomcat with below content:
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: tomcat-pod
-  labels:
-    run: tomcat-pod
-spec:
-  type: NodePort
-  ports:
-  - port: 8080
-    targetPort: 8080
-    nodePort: 30000
-  type: LoadBalancer
-  selector:
-    run: tomcat-pod
+	apiVersion: v1
+	kind: Service
+	metadata:
+  	name: tomcat-pod
+  	labels:
+    	run: tomcat-pod
+	spec:
+  	type: NodePort
+  	ports:
+  	- port: 8080
+    	targetPort: 8080
+    	nodePort: 30000
+  	type: LoadBalancer
+  	selector:
+    	run: tomcat-pod
 
 Create service with below command:
 
@@ -268,38 +270,36 @@ Events:
 
 Sample HTML file for HTML page:
 
-<html>
-<header><title>This is title</title></header>
-<body>
-MSRCOSMOS Test
-</body>
-</html>
-
-
+	<html>
+	<header><title>This is title</title></header>
+	<body>
+	MSRCOSMOS Test
+	</body>
+	</html>
 
 # 11) Creating Couchdb
 	
 	i) Create a deployment yaml file for couchdb with below content:
 
-apiVersion: apps/v1beta2
-kind: Deployment
-metadata:
-  name: couchdb-pod
-spec:
-  selector:
-    matchLabels:
-      run: couchdb-pod
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        run: couchdb-pod
-    spec:
-      containers:
-      - name: couchdb
-        image: couchdb:latest
-        ports:
-        - containerPort: 5984
+	apiVersion: apps/v1beta2
+	kind: Deployment
+	metadata:
+  	name: couchdb-pod
+	spec:
+  	selector:
+    	matchLabels:
+      	run: couchdb-pod
+  	replicas: 2
+  	template:
+	    metadata:
+	      labels:
+        	run: couchdb-pod
+    	spec:
+      	containers:
+	      - name: couchdb
+	        image: couchdb:latest
+	        ports:
+        	- containerPort: 5984
 
 Create couchdb container with below command:
 
@@ -308,21 +308,21 @@ deployment.apps/couchdb-pod created
 
 	ii) create a service yaml file for couchdb with below content:
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: couchdb-pod
-  labels:
-    run: couchdb-pod
-spec:
-  type: NodePort
-  ports:
-  - port: 8080
-    targetPort: 5984
-    nodePort: 30344
-  type: LoadBalancer
-  selector:
-    run: couchdb-pod
+	apiVersion: v1
+	kind: Service
+	metadata:
+  	name: couchdb-pod
+  	labels:
+    	run: couchdb-pod
+	spec:
+  	type: NodePort
+  	ports:
+  	- port: 8080
+    	targetPort: 5984
+    	nodePort: 30344
+  	type: LoadBalancer
+  	selector:
+    	run: couchdb-pod
 
 Create service for couchdb with below command:
 
