@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: couchdb-pod
+  labels:
+    run: couchdb-pod
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 5984
+    nodePort: 30344
+  type: LoadBalancer
+  selector:
+    run: couchdb-pod

@@ -1,0 +1,19 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: couchdb-pod
+spec:
+  selector:
+    matchLabels:
+      run: couchdb-pod
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: couchdb-pod
+    spec:
+      containers:
+      - name: tomcat
+        image: couchdb:latest
+        ports:
+        - containerPort: 5984

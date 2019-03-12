@@ -1,0 +1,26 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: tomcat-pod
+spec:
+  selector:
+    matchLabels:
+      run: tomcat-pod
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: tomcat-pod
+    spec:
+      containers:
+      - name: tomcat
+        image: tomcat:latest
+        volumeMounts:
+        - name: testvolume
+          mountPath: /usr/local/tomcat/webapps/ROOT
+        ports:
+        - containerPort: 8080
+      volumes:
+      - name: testvolume
+        hostPath: 
+          path: /tmp/html
