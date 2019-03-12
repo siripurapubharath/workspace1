@@ -214,7 +214,7 @@ create tomcat container with below command:
 	kubectl create -f tomcat.yaml
 	deployment.apps/tomcat-pod created
 
-	ii) create a service yaml file for tomcat with below content:
+ii) create a service yaml file for tomcat with below content:
 
 	apiVersion: v1
 	kind: Service
@@ -279,7 +279,7 @@ Sample HTML file for HTML page:
 
 # 11) Creating Couchdb
 	
-	i) Create a deployment yaml file for couchdb with below content:
+i) Create a deployment yaml file for couchdb with below content:
 
 	apiVersion: apps/v1beta2
 	kind: Deployment
@@ -306,7 +306,7 @@ Create couchdb container with below command:
 	kubectl create -f couchdb.yaml
 	deployment.apps/couchdb-pod created
 
-	ii) create a service yaml file for couchdb with below content:
+ii) create a service yaml file for couchdb with below content:
 
 	apiVersion: v1
 	kind: Service
