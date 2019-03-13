@@ -54,15 +54,10 @@ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
  pip install awscli –upgrade
 
 # aws configure
-
-AWS Access Key ID [None]: xxxxxxxxxxxxxxxxxxxx
-
-AWS Secret Access Key [None]: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-Default region name [None]: ap-south-1
-
-Default output format [None]:
-
+	AWS Access Key ID [None]: xxxxxxxxxxxxxxxxxxxx
+	AWS Secret Access Key [None]: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	Default region name [None]: ap-south-1
+	Default output format [None]:
 
 # 6) Creating EKS cluster using awscli:
 
@@ -178,7 +173,7 @@ cat configmaps.yaml
 	ip-xxxxxxxxxxxxxx.ap-south-1.compute.internal   Ready     <none>    41m       v1.11.5
 
       
-# 10) Tomcat Web Application Server with a sample HTML Page:
+# 10) Tomcat Web Application Server with a sample HTML Page and Persistent volume:
 
 	i) Create a deployment yaml file for tomcat with below content:
 
@@ -194,20 +189,21 @@ cat configmaps.yaml
   	template:
     	metadata:
       	labels:
-        	run: tomcat-pod
+	        run: tomcat-pod
     	spec:
       	containers:
       	- name: tomcat
 	        image: tomcat:latest
 	        volumeMounts:
-        	- name: testvolume
-          	mountPath: /usr/local/tomcat/webapps/ROOT
+	        - name: testvolume
+	          mountPath: /usr/local/tomcat/webapps/ROOT
         	ports:
-        	- containerPort: 8080
-      	volumes:
-      	- name: testvolume
-	        hostPath:
-	          path: /tmp/html
+	        - containerPort: 8080
+	 volumes:
+      	  - name: testvolume
+ 	       persistentVolumeClaim:
+        	  claimName: test-pvclaim
+
 
 create tomcat container with below command:
 
@@ -356,3 +352,121 @@ Create service for couchdb with below command:
   	----    ------                ----  ----                -------
   	Normal  EnsuringLoadBalancer  9m    service-controller  Ensuring load balancer
   	Normal  EnsuredLoadBalancer   9m    service-controller  Ensured load balancer
+
+
+# 12) creating Dashboard:
+
+Create a dashboard.yaml file with below content:
+
+	apiVersion: v1
+	kind: ServiceAccount
+	metadata:
+  	labels:
+    	k8s-app: kubernetes-dashboard
+  	name: kubernetes-dashboard
+  	namespace: kube-system
+	---
+	apiVersion: rbac.authorization.k8s.io/v1beta1
+	kind: ClusterRoleBinding
+	metadata:
+  	name: kubernetes-dashboard
+  	labels:
+    	k8s-app: kubernetes-dashboard
+	roleRef:
+  	apiGroup: rbac.authorization.k8s.io
+  	kind: ClusterRole
+  	name: cluster-admin
+	subjects:
+	- kind: ServiceAccount
+  	name: kubernetes-dashboard
+  	namespace: kube-system
+	---
+	kind: Deployment
+	apiVersion: extensions/v1beta1
+	metadata:
+  	labels:
+    	k8s-app: kubernetes-dashboard
+  	name: kubernetes-dashboard
+  	namespace: kube-system
+	spec:
+  	replicas: 1
+  	revisionHistoryLimit: 10
+  	selector:
+    	matchLabels:
+      	k8s-app: kubernetes-dashboard
+  	template:
+    	metadata:
+      	labels:
+        k8s-app: kubernetes-dashboard
+    	spec:
+      	containers:
+      	- name: kubernetes-dashboard
+        	image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.6.3
+        	ports:
+        	- containerPort: 9090
+          	protocol: TCP
+        	args:
+        	livenessProbe:
+          	httpGet:
+            	path: /
+            	port: 9090
+          	initialDelaySeconds: 30
+          	timeoutSeconds: 30
+      	serviceAccountName: kubernetes-dashboard
+      	tolerations:
+      	- key: node-role.kubernetes.io/master
+        	effect: NoSchedule
+	---
+	kind: Service
+	apiVersion: v1
+	metadata:
+  	labels:
+    	k8s-app: kubernetes-dashboard
+  	name: kubernetes-dashboard
+  	namespace: kube-system
+	spec:
+  	type: NodePort
+  	ports:
+  	- port: 80
+    	protocol: TCP
+    	targetPort: 9090
+    	nodePort: 31000
+  	type: LoadBalancer
+  	selector:
+    	k8s-app: kubernetes-dashboard
+
+Create dashboard with below command:
+
+	kubectl create -f dashboard.yaml
+	serviceaccount/kubernetes-dashboard created
+	clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+	deployment.extensions/kubernetes-dashboard created
+	service/kubernetes-dashboard created
+
+	kubectl get pods -n kube-system | grep -i kubernetes
+	kubernetes-dashboard-57584d8594-q82nl   1/1       Running   0          2m
+
+	kubectl get svc -n kube-system | grep -i kubernetes-dash
+	kubernetes-dashboard   LoadBalancer   10.100.199.128   a9ff74ce9455f11e9aa350a85b7263ff-136063041.ap-south-1.elb.amazonaws.com   80:31100/TCP    2m
+
+	kubectl describe svc -n kube-system kubernetes-dashboard
+	Name:                     kubernetes-dashboard
+	Namespace:                kube-system
+	Labels:                   k8s-app=kubernetes-dashboard
+	Annotations:              <none>
+	Selector:                 k8s-app=kubernetes-dashboard
+	Type:                     LoadBalancer
+	IP:                       10.100.199.128
+	LoadBalancer Ingress:     a9ff74ce9455f11e9aa350a85b7263ff-136063041.ap-south-1.elb.amazonaws.com
+	Port:                     <unset>  80/TCP
+	TargetPort:               9090/TCP
+	NodePort:                 <unset>  31100/TCP
+	Endpoints:                192.168.183.163:9090
+	Session Affinity:         None
+	External Traffic Policy:  Cluster
+	Events:
+  	Type    Reason                Age   From                Message
+  	----    ------                ----  ----                -------
+  	Normal  EnsuringLoadBalancer  2m    service-controller  Ensuring load balancer
+  	Normal  EnsuredLoadBalancer   2m    service-controller  Ensured load balancer
+	
