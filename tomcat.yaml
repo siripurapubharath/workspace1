@@ -22,5 +22,5 @@ spec:
         - containerPort: 8080
       volumes:
       - name: testvolume
-        hostPath: 
-          path: /tmp/html
+        persistentVolumeClaim:
+          claimName: test-pvclaim
