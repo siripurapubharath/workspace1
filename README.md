@@ -24,16 +24,16 @@ Configure VPC using Cloudformation basic template present in S3 bucket.
 
 # 3) Launching and ec2 instance for master(kubectl):
 
-choose Amazone linux 2 (which has inbuilt tools for our requirement)
-choose instance type t2.micro
-select the VPC that was created above
-subnet-any
-public ip enable
-select security group
-select keypair
-review and launch
+	choose Amazone linux 2 (which has inbuilt tools for our requirement)
+	choose instance type t2.micro
+	select the VPC that was created above
+	subnet-any
+	public ip enable
+	select security group
+	select keypair
+	review and launch
 
-# 4) Installing and configuring Kubectl & aws-iam-authenticator:
+# 4) Install and configure Kubectl & aws-iam-authenticator:
 
    # i) Kubectl:
 
@@ -61,11 +61,9 @@ cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$HOME/
 echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 
 
-# 5) Installing & Configuring awscli:
+# 5) Configuring awscli:
 
- pip install awscli –upgrade
-
-# aws configure
+ 	# aws configure
 	AWS Access Key ID [None]: xxxxxxxxxxxxxxxxxxxx
 	AWS Secret Access Key [None]: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 	Default region name [None]: ap-south-1
@@ -73,8 +71,8 @@ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 
 # 6) Creating EKS cluster using awscli:
 
-Command: 
-aws eks --region ap-south-1 create-cluster --name msrtest --role-arn arn:aws:iam::xxxx:role/msreksrole --resources-vpc-config subnetIds=subnet-0568b97d067a8d869,subnet-03197c55e02595a52,securityGroupIds=sg-072546f83efba8e8b
+	Command: 
+	aws eks --region ap-south-1 create-cluster --name msrtest --role-arn arn:aws:iam::xxxx:role/msreksrole --resources-vpc-config subnetIds=subnet-0568b97d067a8d869,subnet-03197c55e02595a52,securityGroupIds=sg-072546f83efba8e8b
 
 Output:
 		{
@@ -104,8 +102,8 @@ Output:
 
 # 7) Creating & configuring kubeconfig file using awscli: 
 
-Command:
-aws eks --region ap-south-1 update-kubeconfig --name msrtest
+	Command:
+	# aws eks --region ap-south-1 update-kubeconfig --name msrtest
 
 The above command will create .kube folder in $home if dosen’t exist, and a config file in it with below mentioned content.
 
@@ -135,9 +133,7 @@ The above command will create .kube folder in $home if dosen’t exist, and a co
       	command: aws-iam-authenticator
 
 	Command:
-	kubectl get svc
-
-	Output:
+	# kubectl get svc
 	NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
 	kubernetes   ClusterIP   10.100.0.1   <none>        443/TCP   13m
 
@@ -219,7 +215,7 @@ cat configmaps.yaml
 
 create tomcat container with below command:
 
-	kubectl create -f tomcat.yaml
+	# kubectl create -f tomcat.yaml
 	deployment.apps/tomcat-pod created
 
 ii) create a service yaml file for tomcat with below content:
@@ -242,20 +238,20 @@ ii) create a service yaml file for tomcat with below content:
 
 Create service with below command:
 
-	kubectl create -f tomcat-svc.yaml
+	# kubectl create -f tomcat-svc.yaml
 	service/tomcat-pod created
 
-	kubectl get pods
+	# kubectl get pods
 	NAME                         READY     STATUS    RESTARTS   AGE
 	tomcat-pod-5cc66b778-q4qfq   1/1       Running   0          2m
 	tomcat-pod-5cc66b778-qqgct   1/1       Running   0          2m
 
-	kubectl get svc
+	# kubectl get svc
 	NAME         TYPE           CLUSTER-IP      EXTERNAL-IP                                                                PORT(S)          AGE
 	kubernetes   ClusterIP      10.100.0.1      <none>                                                                     443/TCP          5h
 	tomcat-pod   LoadBalancer   10.100.234.49   a4e3367e244d011e981ff0a3bd453b16-1080647442.ap-south-1.elb.amazonaws.com   8080:30000/TCP   53s
 
-	kubectl describe svc tomcat-pod
+	# kubectl describe svc tomcat-pod
 	Name:                     tomcat-pod
 	Namespace:                default
 	Labels:                   run=tomcat-pod
@@ -311,7 +307,7 @@ i) Create a deployment yaml file for couchdb with below content:
 
 Create couchdb container with below command:
 
-	kubectl create -f couchdb.yaml
+	# kubectl create -f couchdb.yaml
 	deployment.apps/couchdb-pod created
 
 ii) create a service yaml file for couchdb with below content:
@@ -334,17 +330,17 @@ ii) create a service yaml file for couchdb with below content:
 
 Create service for couchdb with below command:
 
-	kubectl create -f couchdb-svc.yaml
+	# kubectl create -f couchdb-svc.yaml
 	service/couchdb-pod created
 
-	kubectl get pods | grep -i couchdb
+	# kubectl get pods | grep -i couchdb
 	couchdb-pod-56656d69b-4f4ms   1/1       Running   0          19m
 	couchdb-pod-56656d69b-sjmj5   1/1       Running   0          19m
 
-	kubectl get svc | grep -i couchdb
+	# kubectl get svc | grep -i couchdb
 	couchdb-pod   LoadBalancer   10.100.25.24     adac3d0a144df11e981ff0a3bd453b16-316676107.ap-south-1.elb.amazonaws.com   8080:30344/TCP   10m
 
-	kubectl describe svc couchdb-pod
+	# kubectl describe svc couchdb-pod
 	Name:                     couchdb-pod
 	Namespace:                default
 	Labels:                   run=couchdb-pod
@@ -449,19 +445,19 @@ Create a dashboard.yaml file with below content:
 
 Create dashboard with below command:
 
-	kubectl create -f dashboard.yaml
+	# kubectl create -f dashboard.yaml
 	serviceaccount/kubernetes-dashboard created
 	clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
 	deployment.extensions/kubernetes-dashboard created
 	service/kubernetes-dashboard created
 
-	kubectl get pods -n kube-system | grep -i kubernetes
+	# kubectl get pods -n kube-system | grep -i kubernetes
 	kubernetes-dashboard-57584d8594-q82nl   1/1       Running   0          2m
 
-	kubectl get svc -n kube-system | grep -i kubernetes-dash
+	# kubectl get svc -n kube-system | grep -i kubernetes-dash
 	kubernetes-dashboard   LoadBalancer   10.100.199.128   a9ff74ce9455f11e9aa350a85b7263ff-136063041.ap-south-1.elb.amazonaws.com   80:31100/TCP    2m
 
-	kubectl describe svc -n kube-system kubernetes-dashboard
+	# kubectl describe svc -n kube-system kubernetes-dashboard
 	Name:                     kubernetes-dashboard
 	Namespace:                kube-system
 	Labels:                   k8s-app=kubernetes-dashboard
