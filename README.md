@@ -22,7 +22,20 @@ Configure VPC using Cloudformation basic template present in S3 bucket.
 	iv) Review & click Create
 
 
-# 3) Installing and configuring Kubectl:
+# 3) Launching and ec2 instance for master(kubectl):
+
+choose Amazone linux 2 (which has inbuilt tools for our requirement)
+choose instance type t2.micro
+select the VPC that was created above
+subnet-any
+public ip enable
+select security group
+select keypair
+review and launch
+
+# 4) Installing and configuring Kubectl & aws-iam-authenticator:
+
+   # i) Kubectl:
 
 curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/kubectl
 
@@ -37,8 +50,7 @@ echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 kubectl version --short --client
 Client Version: v1.11.5
 
-
-# 4) Installing and configuring aws-iam-authenticator:
+   # ii) aws-iam-authenticator
 
 curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.11.5/2018-12-06/bin/linux/amd64/aws-iam-authenticator
 
